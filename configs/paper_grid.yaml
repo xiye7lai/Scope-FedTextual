@@ -1,0 +1,74 @@
+run:
+  name: scoped_fedtextgrad
+  seed: 13
+  output_dir: results/paper_grid
+  dry_run: false
+  experiment_tier: paper_grid
+
+grid:
+  clients: [6, 9]
+  settings: [task_skew, mixed]
+  seeds: [13, 42, 73]
+  local_steps: [1, 3]
+  batch_sizes: [1, 3]
+
+data:
+  source: official_fedtextgrad
+  cache_dir: .cache/fedtextgrad_datasets
+  setting: task_skew
+  tasks: [tracking_shuffled_objects, movie_recommendation, sports_understanding]
+  num_clients: 6
+  train_per_client: 20
+  val_per_client: 20
+  test_per_client: 50
+
+llm:
+  provider: vllm_openai
+  base_url: http://127.0.0.1:8000/v1
+  model_name: Qwen/Qwen3-8B
+  tokenizer_name: Qwen/Qwen3-8B
+  tokenizer_local_files_only: true
+  require_exact_tokenizer: true
+  api_key_env: LOCAL_LLM_API_KEY
+  temperature: 0.0
+  top_p: 1.0
+  top_k: -1
+  max_new_tokens: 768
+  seed: 13
+  enable_thinking: false
+  timeout_seconds: 180
+  max_retries: 3
+  shared_cache_dir: results/cache/qwen3_8b
+  max_llm_calls: 20000
+
+evaluation:
+  concurrency: 48
+  local_client_concurrency: 9
+  utility_job_concurrency: 36
+  utility_concurrency_per_job: 2
+  gate_job_concurrency: 36
+  gate_concurrency_per_job: 2
+  method_client_concurrency: 36
+  test_concurrency_per_job: 2
+
+optimization:
+  initial_prompt: "You will answer a reasoning question. Think step by step. The last line of your response must be exactly 'Answer: $VALUE', where VALUE is the requested number, option, word, or short phrase."
+  formatting_instruction: "The last line of your response must be exactly 'Answer: $VALUE', where VALUE is the requested number, option, word, or short phrase."
+  local_epochs: 1
+  max_steps: 1
+  batch_size: 1
+  max_failure_examples: 3
+  proximal_update: true
+
+aggregation:
+  methods: [concat, summarization, sum_uid]
+
+scoped:
+  variants: [utility]
+  budgets: [128, 256, 512]
+  epsilon: 0.0
+  max_rule_tokens: 64
+
+safe:
+  enabled: true
+  delta: 0.0

@@ -1,0 +1,7 @@
+{
+  "name": "FedTextGrad: Federated Textual Gradient",
+  "repository": "https://github.com/ubc-tea/FedTextGrad",
+  "paper": "https://arxiv.org/abs/2502.19980",
+  "reference_commit": "7ebebee1efbae08c9a6e3bbcf3095a00a1517607",
+  "integration": "Protocol-compatible adapter; the upstream repository is not vendored."
+}

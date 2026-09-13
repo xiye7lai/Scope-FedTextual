@@ -1,0 +1,57 @@
+run:
+  name: smoke
+  seed: 13
+  output_dir: results/smoke
+  dry_run: true
+
+grid:
+  clients: [3]
+  settings: [task_skew]
+  seeds: [13]
+  local_steps: [1]
+  batch_sizes: [1]
+
+data:
+  source: builtin
+  setting: task_skew
+  tasks: [object_counting, multistep_arithmetic, gsm8k]
+  num_clients: 3
+  train_per_client: 3
+  val_per_client: 2
+  test_per_client: 3
+
+llm:
+  provider: mock
+  model: mock-scope-fedtextual
+  require_exact_tokenizer: false
+  max_llm_calls: 10000
+
+evaluation:
+  concurrency: 4
+  local_client_concurrency: 3
+  utility_job_concurrency: 3
+  utility_concurrency_per_job: 2
+  gate_job_concurrency: 3
+  gate_concurrency_per_job: 2
+  method_client_concurrency: 3
+  test_concurrency_per_job: 2
+
+optimization:
+  local_epochs: 1
+  max_steps: 1
+  batch_size: 1
+  max_failure_examples: 1
+  proximal_update: true
+
+aggregation:
+  methods: []
+
+scoped:
+  variants: [utility]
+  budgets: [128]
+  epsilon: 0.0
+  max_rule_tokens: 32
+
+safe:
+  enabled: true
+  delta: 0.0
